@@ -2,6 +2,7 @@ package com.example.lr20190024.users.seeders;
 
 import com.example.lr20190024.users.entities.Privilege;
 import com.example.lr20190024.users.entities.Role;
+import com.example.lr20190024.users.entities.User;
 import com.example.lr20190024.users.enums.PrivilegeName;
 import com.example.lr20190024.users.enums.RoleName;
 import com.example.lr20190024.users.repositories.PrivilegesRepository;
@@ -9,6 +10,7 @@ import com.example.lr20190024.users.repositories.RolesRepository;
 import com.example.lr20190024.users.repositories.UsersRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public class Seeder {
     private UsersRepository usersRepository;
     private RolesRepository rolesRepository;
     private PrivilegesRepository privilegesRepository;
+    private PasswordEncoder passwordEncoder;
 
     @PostConstruct
     public void seed() {
@@ -34,7 +37,7 @@ public class Seeder {
 
         // setup admin role
         Set<Privilege> adminPrivileges = new HashSet<>(privilegesRepository.findAll());
-        rolesRepository.save(new Role(RoleName.ADMIN, adminPrivileges));
+        Role adminRole = rolesRepository.save(new Role(RoleName.ADMIN, adminPrivileges));
 
         // setup user role
         List<PrivilegeName> userPrivilegesCollection = new ArrayList<>();
@@ -58,8 +61,26 @@ public class Seeder {
         userPrivilegesCollection.add(PrivilegeName.STORE_NOTE);
         userPrivilegesCollection.add(PrivilegeName.UPDATE_NOTE);
         userPrivilegesCollection.add(PrivilegeName.DELETE_NOTE);
-        
+
         Set<Privilege> userPrivileges = new HashSet<>(privilegesRepository.findByNameIn(userPrivilegesCollection));
-        rolesRepository.save(new Role(RoleName.USER, userPrivileges));
+        Role userRole = rolesRepository.save(new Role(RoleName.USER, userPrivileges));
+
+        User crmAdmin = new User();
+        crmAdmin.setEmail("crmadmin@gmail.com");
+        crmAdmin.setPassword(passwordEncoder.encode("crm2022"));
+        crmAdmin.setEnabled(true);
+        crmAdmin.setFirstName("CRM");
+        crmAdmin.setLastName("Admin");
+        crmAdmin.setRole(adminRole);
+        usersRepository.save(crmAdmin);
+
+        User crmUser = new User();
+        crmUser.setEmail("crmuser@gmail.com");
+        crmUser.setPassword(passwordEncoder.encode("crm2022"));
+        crmUser.setEnabled(true);
+        crmUser.setFirstName("CRM");
+        crmUser.setLastName("User");
+        crmUser.setRole(userRole);
+        usersRepository.save(crmUser);
     }
 }

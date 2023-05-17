@@ -1,5 +1,6 @@
 package com.example.lr20190024.config;
 
+import com.example.lr20190024.users.services.JwtUserDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,14 @@ import static org.springframework.web.cors.CorsConfiguration.ALL;
 @AllArgsConstructor
 public class WebSecurityConfig {
 
+    private final JwtUserDetailsService jwtUserDetailsService;
+    private final JwtTokenUtil jwtTokenUtil;
+
+    @Bean
+    public JwtRequestFilter authenticationJwtTokenFilter() {
+        return new JwtRequestFilter(jwtTokenUtil, jwtUserDetailsService);
+    }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -37,15 +46,15 @@ public class WebSecurityConfig {
         return http
                 .cors()
                 .and()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeHttpRequests()
+                .anyRequest().permitAll()
+                .and()
                 .httpBasic().disable()
                 .formLogin().disable()
-                .csrf().disable()
-                .authorizeHttpRequests()
-                .anyRequest()
-                .permitAll()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().build();
+                .build();
     }
 
     @Bean
