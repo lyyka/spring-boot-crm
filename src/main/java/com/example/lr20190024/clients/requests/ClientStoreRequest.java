@@ -30,7 +30,6 @@ public class ClientStoreRequest {
 
     public Client toEntity() {
         return new Client(
-                null,
                 this.firstName,
                 this.lastName,
                 this.email,
