@@ -20,7 +20,7 @@ import java.util.Set;
 
 @Service
 @AllArgsConstructor
-public class Seeder {
+public class UsersSeeder {
     private UsersRepository usersRepository;
     private RolesRepository rolesRepository;
     private PrivilegesRepository privilegesRepository;
