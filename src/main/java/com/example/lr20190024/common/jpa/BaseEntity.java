@@ -8,7 +8,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.Instant;
 import java.util.Objects;
 
 @Getter
@@ -19,6 +22,11 @@ public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
+
+    @CreatedDate
+    protected Instant createdAt;
+    @LastModifiedDate
+    protected Instant updatedAt;
 
     @Override
     public boolean equals(Object o) {
