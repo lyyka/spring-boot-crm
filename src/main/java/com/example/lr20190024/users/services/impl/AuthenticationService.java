@@ -1,5 +1,6 @@
-package com.example.lr20190024.users.services;
+package com.example.lr20190024.users.services.impl;
 
+import com.example.lr20190024.users.services.IAuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService {
+public class AuthenticationService implements IAuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public void authenticate(String username, String password) throws Exception {

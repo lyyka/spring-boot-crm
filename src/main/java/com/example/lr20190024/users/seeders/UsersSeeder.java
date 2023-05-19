@@ -46,6 +46,8 @@ public class UsersSeeder {
         userPrivilegesCollection.add(PrivilegeName.STORE_CLIENT);
         userPrivilegesCollection.add(PrivilegeName.UPDATE_CLIENT);
         userPrivilegesCollection.add(PrivilegeName.DELETE_CLIENT);
+        userPrivilegesCollection.add(PrivilegeName.VIEW_PIPELINE);
+        userPrivilegesCollection.add(PrivilegeName.VIEW_STAGE);
         userPrivilegesCollection.add(PrivilegeName.CREATE_DEAL);
         userPrivilegesCollection.add(PrivilegeName.VIEW_DEAL);
         userPrivilegesCollection.add(PrivilegeName.STORE_DEAL);

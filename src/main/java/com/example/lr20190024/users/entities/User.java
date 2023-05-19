@@ -1,6 +1,7 @@
 package com.example.lr20190024.users.entities;
 
 import com.example.lr20190024.common.jpa.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
@@ -23,6 +24,7 @@ public class User extends BaseEntity implements UserDetails {
     private String lastName;
     @Column(unique = true)
     private String email;
+    @JsonIgnore
     private String password;
     private Boolean enabled;
     @OneToOne

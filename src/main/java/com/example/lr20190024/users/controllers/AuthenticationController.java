@@ -3,8 +3,8 @@ package com.example.lr20190024.users.controllers;
 import com.example.lr20190024.config.JwtTokenUtil;
 import com.example.lr20190024.users.requests.LoginRequest;
 import com.example.lr20190024.users.responses.LoginResponse;
-import com.example.lr20190024.users.services.AuthenticationService;
-import com.example.lr20190024.users.services.JwtUserDetailsService;
+import com.example.lr20190024.users.services.IAuthenticationService;
+import com.example.lr20190024.users.services.impl.JwtUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthenticationController {
-    private final AuthenticationService authenticationService;
+    private final IAuthenticationService authenticationService;
 
     private final JwtTokenUtil jwtTokenUtil;
 

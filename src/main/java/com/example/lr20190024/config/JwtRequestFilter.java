@@ -1,6 +1,6 @@
 package com.example.lr20190024.config;
 
-import com.example.lr20190024.users.services.JwtUserDetailsService;
+import com.example.lr20190024.users.services.impl.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,7 +26,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtUserDetailsService jwtUserDetailsService;
 
-    
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request)
             throws ServletException {
@@ -45,6 +45,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         try {
             String jwtToken = requestTokenHeader.substring(7);
             String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 

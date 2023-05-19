@@ -1,12 +1,12 @@
 package com.example.lr20190024.config;
 
-import com.example.lr20190024.users.services.JwtUserDetailsService;
+import com.example.lr20190024.users.services.impl.JwtUserDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,7 +23,7 @@ import static org.springframework.web.cors.CorsConfiguration.ALL;
 
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity()
 @EnableWebSecurity
 @AllArgsConstructor
 public class WebSecurityConfig {
@@ -46,6 +46,7 @@ public class WebSecurityConfig {
         return http
                 .cors()
                 .and()
+                .anonymous().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
