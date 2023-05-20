@@ -52,7 +52,6 @@ public class UsersSeeder {
         userPrivilegesCollection.add(PrivilegeName.VIEW_DEAL);
         userPrivilegesCollection.add(PrivilegeName.STORE_DEAL);
         userPrivilegesCollection.add(PrivilegeName.UPDATE_DEAL);
-        userPrivilegesCollection.add(PrivilegeName.DELETE_DEAL);
         userPrivilegesCollection.add(PrivilegeName.CREATE_ACTIVITY);
         userPrivilegesCollection.add(PrivilegeName.VIEW_ACTIVITY);
         userPrivilegesCollection.add(PrivilegeName.STORE_ACTIVITY);

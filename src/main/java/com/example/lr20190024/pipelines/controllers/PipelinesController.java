@@ -4,6 +4,7 @@ import com.example.lr20190024.common.exception.ResourceNotFoundException;
 import com.example.lr20190024.pipelines.entities.Pipeline;
 import com.example.lr20190024.pipelines.requests.PipelineStoreRequest;
 import com.example.lr20190024.pipelines.services.IPipelineService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "crm")
 @RequestMapping("/api/pipelines")
 public class PipelinesController {
     private final IPipelineService pipelineService;

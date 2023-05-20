@@ -4,6 +4,7 @@ import com.example.lr20190024.common.exception.ResourceNotFoundException;
 import com.example.lr20190024.stages.entities.Stage;
 import com.example.lr20190024.stages.requests.StageStoreRequest;
 import com.example.lr20190024.stages.services.IStageService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "crm")
 @RequestMapping("/api/stages")
 public class StagesController {
     private final IStageService stageService;

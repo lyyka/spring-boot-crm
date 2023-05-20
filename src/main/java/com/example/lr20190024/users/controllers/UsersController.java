@@ -3,6 +3,7 @@ package com.example.lr20190024.users.controllers;
 import com.example.lr20190024.users.entities.User;
 import com.example.lr20190024.users.requests.UserStoreRequest;
 import com.example.lr20190024.users.services.IUserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "crm")
 @RequestMapping("/api/users")
 public class UsersController {
     private final IUserService userService;

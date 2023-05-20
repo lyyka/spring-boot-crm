@@ -29,8 +29,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request)
             throws ServletException {
+        // do not filter any non-api or login routes
         String path = request.getRequestURI();
-        return "/api/auth/login".equals(path);
+        return !path.startsWith("/api") ||
+                "/api/auth/login".equals(path);
     }
 
     @Override
