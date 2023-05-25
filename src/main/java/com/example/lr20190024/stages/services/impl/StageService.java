@@ -6,6 +6,8 @@ import com.example.lr20190024.pipelines.repositories.PipelinesRepository;
 import com.example.lr20190024.stages.entities.Stage;
 import com.example.lr20190024.stages.repositories.StagesRepository;
 import com.example.lr20190024.stages.requests.StageStoreRequest;
+import com.example.lr20190024.stages.requests.StageUpdateRequest;
+import com.example.lr20190024.stages.responses.StageResponse;
 import com.example.lr20190024.stages.services.IStageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,8 +21,17 @@ public class StageService implements IStageService {
     private final PipelinesRepository pipelinesRepository;
 
     @Override
-    public List<Stage> getAll() {
-        return this.stagesRepository.findAll();
+    public List<StageResponse> getForPipeline(Long id) {
+        return this.stagesRepository.findByPipeline(
+                this.pipelinesRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Pipeline not found"))
+        ).stream().map(StageResponse::fromEntity).toList();
+    }
+
+    @Override
+    public StageResponse get(Long id) {
+        return StageResponse.fromEntity(
+                this.stagesRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stage not found"))
+        );
     }
 
     @Override
@@ -32,11 +43,9 @@ public class StageService implements IStageService {
     }
 
     @Override
-    public Stage update(Long id, StageStoreRequest stageStoreRequest) {
-        Pipeline pipeline = this.pipelinesRepository.findById(stageStoreRequest.getPipelineId()).orElseThrow(() -> new ResourceNotFoundException("No pipeline found"));
+    public Stage update(Long id, StageUpdateRequest stageUpdateRequest) {
         Stage stage = this.stagesRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No stage found"));
-        stage.setName(stageStoreRequest.getName());
-        stage.setPipeline(pipeline);
+        stage.setName(stageUpdateRequest.getName());
         return this.stagesRepository.save(stage);
     }
 

@@ -4,6 +4,7 @@ import com.example.lr20190024.common.exception.ResourceNotFoundException;
 import com.example.lr20190024.pipelines.entities.Pipeline;
 import com.example.lr20190024.pipelines.repositories.PipelinesRepository;
 import com.example.lr20190024.pipelines.requests.PipelineStoreRequest;
+import com.example.lr20190024.pipelines.responses.PipelineResponse;
 import com.example.lr20190024.pipelines.services.IPipelineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,15 @@ public class PipelineService implements IPipelineService {
     private final PipelinesRepository pipelinesRepository;
 
     @Override
-    public List<Pipeline> getAll() {
-        return this.pipelinesRepository.findAll();
+    public List<PipelineResponse> getAll() {
+        return this.pipelinesRepository.findAll().stream().map(PipelineResponse::fromEntity).toList();
+    }
+
+    @Override
+    public PipelineResponse get(Long id) {
+        return PipelineResponse.fromEntity(
+                this.pipelinesRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Pipeline not found"))
+        );
     }
 
     @Override

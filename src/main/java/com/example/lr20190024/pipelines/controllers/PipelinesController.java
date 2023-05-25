@@ -3,6 +3,7 @@ package com.example.lr20190024.pipelines.controllers;
 import com.example.lr20190024.common.exception.ResourceNotFoundException;
 import com.example.lr20190024.pipelines.entities.Pipeline;
 import com.example.lr20190024.pipelines.requests.PipelineStoreRequest;
+import com.example.lr20190024.pipelines.responses.PipelineResponse;
 import com.example.lr20190024.pipelines.services.IPipelineService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Positive;
@@ -24,23 +25,29 @@ public class PipelinesController {
 
     @GetMapping(value = "")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_VIEW_PIPELINE')")
-    public ResponseEntity<List<Pipeline>> index() {
+    public ResponseEntity<List<PipelineResponse>> index() {
         return ResponseEntity.ok().body(this.pipelineService.getAll());
+    }
+
+    @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_VIEW_PIPELINE')")
+    public ResponseEntity<PipelineResponse> get(@PathVariable @Positive Long id) {
+        return ResponseEntity.ok().body(this.pipelineService.get(id));
     }
 
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_CREATE_PIPELINE')")
-    public ResponseEntity<Pipeline> store(@RequestBody @Validated PipelineStoreRequest pipelineStoreRequest) {
+    public ResponseEntity<PipelineResponse> store(@RequestBody @Validated PipelineStoreRequest pipelineStoreRequest) {
         Pipeline pipeline = this.pipelineService.store(pipelineStoreRequest);
-        return ResponseEntity.ok().body(pipeline);
+        return ResponseEntity.ok().body(PipelineResponse.fromEntity(pipeline));
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_UPDATE_PIPELINE')")
-    public ResponseEntity<Pipeline> update(@PathVariable @Positive Long id, @RequestBody @Validated PipelineStoreRequest pipelineStoreRequest) {
+    public ResponseEntity<PipelineResponse> update(@PathVariable @Positive Long id, @RequestBody @Validated PipelineStoreRequest pipelineStoreRequest) {
         try {
             Pipeline pipeline = this.pipelineService.update(id, pipelineStoreRequest);
-            return ResponseEntity.ok().body(pipeline);
+            return ResponseEntity.ok().body(PipelineResponse.fromEntity(pipeline));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
