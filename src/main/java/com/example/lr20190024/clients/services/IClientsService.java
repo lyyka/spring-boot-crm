@@ -1,16 +1,18 @@
 package com.example.lr20190024.clients.services;
 
-import com.example.lr20190024.clients.entities.Client;
 import com.example.lr20190024.clients.requests.ClientStoreRequest;
+import com.example.lr20190024.clients.responses.ClientResponse;
 
 import java.util.List;
 
 public interface IClientsService {
-    List<Client> getAll();
+    List<ClientResponse> getAll();
 
-    Client store(ClientStoreRequest clientStoreRequest);
+    ClientResponse get(Long id);
 
-    Client update(Long id, ClientStoreRequest clientStoreRequest);
+    ClientResponse store(ClientStoreRequest clientStoreRequest);
+
+    ClientResponse update(Long id, ClientStoreRequest clientStoreRequest);
 
     void delete(Long id);
 }
