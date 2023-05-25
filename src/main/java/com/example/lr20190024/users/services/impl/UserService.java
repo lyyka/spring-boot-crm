@@ -5,16 +5,20 @@ import com.example.lr20190024.common.exception.ResourceNotFoundException;
 import com.example.lr20190024.common.utils.RandomPassword;
 import com.example.lr20190024.users.emails.UserCreatedEmail;
 import com.example.lr20190024.users.entities.User;
+import com.example.lr20190024.users.exceptions.SelfUpdateException;
 import com.example.lr20190024.users.repositories.RolesRepository;
 import com.example.lr20190024.users.repositories.UsersRepository;
 import com.example.lr20190024.users.requests.UserStoreRequest;
 import com.example.lr20190024.users.responses.UserResponse;
 import com.example.lr20190024.users.services.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -54,13 +58,20 @@ public class UserService implements IUserService {
         return UserResponse.fromEntity(user);
     }
 
-    public UserResponse update(Long id, UserStoreRequest request) {
+    public UserResponse update(Long id, UserStoreRequest request) throws SelfUpdateException {
+        Authentication currentAuthUser = SecurityContextHolder.getContext().getAuthentication();
+        User currentAuthUserDb = this.usersRepository.findByEmail(currentAuthUser.getName());
+
+        if (currentAuthUserDb != null && Objects.equals(currentAuthUserDb.getId(), id)) {
+            throw new SelfUpdateException("Cannot self update an account");
+        }
+
         User user = this.usersRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setEnabled(request.getEnabled());
-        user.setRole(rolesRepository.findById(request.getRoleId().longValue()).orElseThrow(() -> new ResourceNotFoundException("Role not found")));
+        user.setRole(rolesRepository.findById(request.getRoleId()).orElseThrow(() -> new ResourceNotFoundException("Role not found")));
         return UserResponse.fromEntity(this.usersRepository.save(user));
     }
 

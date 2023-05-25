@@ -1,5 +1,6 @@
 package com.example.lr20190024.users.controllers;
 
+import com.example.lr20190024.users.exceptions.SelfUpdateException;
 import com.example.lr20190024.users.requests.UserStoreRequest;
 import com.example.lr20190024.users.responses.UserResponse;
 import com.example.lr20190024.users.services.IUserService;
@@ -44,9 +45,13 @@ public class UsersController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_UPDATE_USER')")
     public ResponseEntity<UserResponse> update(@PathVariable @Positive Long id, @RequestBody @Validated UserStoreRequest request) {
-        return ResponseEntity.ok().body(
-                this.userService.update(id, request)
-        );
+        try {
+            return ResponseEntity.ok().body(
+                    this.userService.update(id, request)
+            );
+        } catch (SelfUpdateException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping(value = "/{id}")
