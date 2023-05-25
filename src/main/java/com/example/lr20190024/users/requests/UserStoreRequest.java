@@ -20,5 +20,5 @@ public class UserStoreRequest {
     private String lastName;
 
     @Positive
-    private Integer roleId;
+    private Long roleId;
 }

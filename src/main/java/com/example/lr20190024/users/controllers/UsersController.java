@@ -1,7 +1,7 @@
 package com.example.lr20190024.users.controllers;
 
-import com.example.lr20190024.users.entities.User;
 import com.example.lr20190024.users.requests.UserStoreRequest;
+import com.example.lr20190024.users.responses.UserResponse;
 import com.example.lr20190024.users.services.IUserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Positive;
@@ -23,13 +23,13 @@ public class UsersController {
 
     @GetMapping(value = "")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_VIEW_USER')")
-    public ResponseEntity<List<User>> index() {
+    public ResponseEntity<List<UserResponse>> index() {
         return ResponseEntity.ok().body(this.userService.all());
     }
 
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_CREATE_USER')")
-    public ResponseEntity<User> store(@RequestBody @Validated UserStoreRequest request) {
+    public ResponseEntity<UserResponse> store(@RequestBody @Validated UserStoreRequest request) {
         return ResponseEntity.ok().body(
                 this.userService.store(request)
         );
@@ -37,7 +37,7 @@ public class UsersController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_UPDATE_USER')")
-    public ResponseEntity<User> update(@PathVariable @Positive Long id, @RequestBody @Validated UserStoreRequest request) {
+    public ResponseEntity<UserResponse> update(@PathVariable @Positive Long id, @RequestBody @Validated UserStoreRequest request) {
         return ResponseEntity.ok().body(
                 this.userService.update(id, request)
         );

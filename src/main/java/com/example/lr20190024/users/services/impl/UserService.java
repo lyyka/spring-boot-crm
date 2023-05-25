@@ -8,6 +8,7 @@ import com.example.lr20190024.users.entities.User;
 import com.example.lr20190024.users.repositories.RolesRepository;
 import com.example.lr20190024.users.repositories.UsersRepository;
 import com.example.lr20190024.users.requests.UserStoreRequest;
+import com.example.lr20190024.users.responses.UserResponse;
 import com.example.lr20190024.users.services.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,11 +25,11 @@ public class UserService implements IUserService {
     private final RandomPassword randomPassword;
     private final IEmailService emailService;
 
-    public List<User> all() {
-        return this.usersRepository.findAll();
+    public List<UserResponse> all() {
+        return this.usersRepository.findAll().stream().map(UserResponse::fromEntity).toList();
     }
 
-    public User store(UserStoreRequest request) {
+    public UserResponse store(UserStoreRequest request) {
         String password = randomPassword.generate();
         User user = this.usersRepository.save(
                 new User(
@@ -46,17 +47,17 @@ public class UserService implements IUserService {
                         password
                 )
         );
-        return user;
+        return UserResponse.fromEntity(user);
     }
 
-    public User update(Long id, UserStoreRequest request) {
+    public UserResponse update(Long id, UserStoreRequest request) {
         User user = this.usersRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setEnabled(request.getEnabled());
         user.setRole(rolesRepository.findById(request.getRoleId().longValue()).orElseThrow(() -> new ResourceNotFoundException("Role not found")));
-        return this.usersRepository.save(user);
+        return UserResponse.fromEntity(this.usersRepository.save(user));
     }
 
     public void delete(Long id) {
