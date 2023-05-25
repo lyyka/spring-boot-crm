@@ -27,6 +27,12 @@ public class UsersController {
         return ResponseEntity.ok().body(this.userService.all());
     }
 
+    @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_VIEW_USER')")
+    public ResponseEntity<UserResponse> get(@PathVariable @Positive Long id) {
+        return ResponseEntity.ok().body(this.userService.get(id));
+    }
+
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_CREATE_USER')")
     public ResponseEntity<UserResponse> store(@RequestBody @Validated UserStoreRequest request) {

@@ -29,6 +29,10 @@ public class UserService implements IUserService {
         return this.usersRepository.findAll().stream().map(UserResponse::fromEntity).toList();
     }
 
+    public UserResponse get(Long id) {
+        return UserResponse.fromEntity(this.usersRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found")));
+    }
+
     public UserResponse store(UserStoreRequest request) {
         String password = randomPassword.generate();
         User user = this.usersRepository.save(

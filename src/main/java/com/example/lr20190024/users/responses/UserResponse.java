@@ -11,6 +11,7 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private String email;
+    private boolean enabled;
     private RoleResponse role;
 
     public static UserResponse fromEntity(User user) {
@@ -19,6 +20,7 @@ public class UserResponse {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
+                user.isEnabled(),
                 RoleResponse.fromEntity(user.getRole())
         );
     }

@@ -8,6 +8,8 @@ import java.util.List;
 public interface IUserService {
     List<UserResponse> all();
 
+    UserResponse get(Long id);
+
     UserResponse store(UserStoreRequest request);
 
     UserResponse update(Long id, UserStoreRequest request);
