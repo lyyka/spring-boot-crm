@@ -1,19 +1,20 @@
 package com.example.lr20190024.users.controllers;
 
+import com.example.lr20190024.common.utils.Paginate;
 import com.example.lr20190024.users.exceptions.SelfUpdateException;
 import com.example.lr20190024.users.requests.UserStoreRequest;
 import com.example.lr20190024.users.responses.UserResponse;
 import com.example.lr20190024.users.services.IUserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,8 +25,10 @@ public class UsersController {
 
     @GetMapping(value = "")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_VIEW_USER')")
-    public ResponseEntity<List<UserResponse>> index() {
-        return ResponseEntity.ok().body(this.userService.all());
+    public ResponseEntity<Page<UserResponse>> index(@Nullable Integer page, @Nullable Integer perPage) {
+        return ResponseEntity.ok().body(this.userService.all(
+                Paginate.from(page, perPage)
+        ));
     }
 
     @GetMapping(value = "/{id}")

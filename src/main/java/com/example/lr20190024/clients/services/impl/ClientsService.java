@@ -7,9 +7,10 @@ import com.example.lr20190024.clients.responses.ClientResponse;
 import com.example.lr20190024.clients.services.IClientsService;
 import com.example.lr20190024.common.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -18,8 +19,13 @@ public class ClientsService implements IClientsService {
     private final ClientsRepository clientsRepository;
 
     @Override
-    public List<ClientResponse> getAll() {
-        return this.clientsRepository.findAll().stream().map(ClientResponse::fromEntity).toList();
+    public Page<ClientResponse> getAll(Pageable pageable) {
+        Page<Client> page = this.clientsRepository.findAll(pageable);
+        return new PageImpl<>(
+                page.getContent().stream().map(ClientResponse::fromEntity).toList(),
+                pageable,
+                page.getTotalElements()
+        );
     }
 
     @Override

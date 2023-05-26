@@ -7,9 +7,10 @@ import com.example.lr20190024.pipelines.requests.PipelineStoreRequest;
 import com.example.lr20190024.pipelines.responses.PipelineResponse;
 import com.example.lr20190024.pipelines.services.IPipelineService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,8 +18,13 @@ public class PipelineService implements IPipelineService {
     private final PipelinesRepository pipelinesRepository;
 
     @Override
-    public List<PipelineResponse> getAll() {
-        return this.pipelinesRepository.findAll().stream().map(PipelineResponse::fromEntity).toList();
+    public Page<PipelineResponse> getAll(Pageable pageable) {
+        Page<Pipeline> page = this.pipelinesRepository.findAll(pageable);
+        return new PageImpl<>(
+                page.getContent().stream().map(PipelineResponse::fromEntity).toList(),
+                pageable,
+                page.getTotalElements()
+        );
     }
 
     @Override

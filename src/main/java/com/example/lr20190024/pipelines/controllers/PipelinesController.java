@@ -1,20 +1,21 @@
 package com.example.lr20190024.pipelines.controllers;
 
 import com.example.lr20190024.common.exception.ResourceNotFoundException;
+import com.example.lr20190024.common.utils.Paginate;
 import com.example.lr20190024.pipelines.entities.Pipeline;
 import com.example.lr20190024.pipelines.requests.PipelineStoreRequest;
 import com.example.lr20190024.pipelines.responses.PipelineResponse;
 import com.example.lr20190024.pipelines.services.IPipelineService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,8 +26,10 @@ public class PipelinesController {
 
     @GetMapping(value = "")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_VIEW_PIPELINE')")
-    public ResponseEntity<List<PipelineResponse>> index() {
-        return ResponseEntity.ok().body(this.pipelineService.getAll());
+    public ResponseEntity<Page<PipelineResponse>> index(@Nullable Integer page, @Nullable Integer perPage) {
+        return ResponseEntity.ok().body(this.pipelineService.getAll(
+                Paginate.from(page, perPage)
+        ));
     }
 
     @GetMapping(value = "/{id}")

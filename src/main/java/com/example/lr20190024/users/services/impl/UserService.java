@@ -12,12 +12,14 @@ import com.example.lr20190024.users.requests.UserStoreRequest;
 import com.example.lr20190024.users.responses.UserResponse;
 import com.example.lr20190024.users.services.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -29,8 +31,13 @@ public class UserService implements IUserService {
     private final RandomPassword randomPassword;
     private final IEmailService emailService;
 
-    public List<UserResponse> all() {
-        return this.usersRepository.findAll().stream().map(UserResponse::fromEntity).toList();
+    public Page<UserResponse> all(Pageable pageable) {
+        Page<User> page = this.usersRepository.findAll(pageable);
+        return new PageImpl<>(
+                page.getContent().stream().map(UserResponse::fromEntity).toList(),
+                pageable,
+                page.getTotalElements()
+        );
     }
 
     public UserResponse get(Long id) {
