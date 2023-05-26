@@ -1,9 +1,9 @@
 package com.example.lr20190024.deals.controllers;
 
-import com.example.lr20190024.deals.entities.Deal;
 import com.example.lr20190024.deals.requests.DealStoreRequest;
 import com.example.lr20190024.deals.requests.DealUpdateRequest;
-import com.example.lr20190024.deals.services.impl.DealService;
+import com.example.lr20190024.deals.responses.DealResponse;
+import com.example.lr20190024.deals.services.IDealService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -21,23 +21,23 @@ import java.util.List;
 @RequestMapping("/api/deals")
 public class DealsController {
 
-    private final DealService dealService;
+    private final IDealService dealService;
 
-    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/for-client/{clientId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_VIEW_DEAL', 'ROLE_USER_VIEW_DEAL')")
-    public ResponseEntity<List<Deal>> index() {
-        return ResponseEntity.ok(this.dealService.all());
+    public ResponseEntity<List<DealResponse>> getForClient(@PathVariable @Positive Long clientId) {
+        return ResponseEntity.ok(this.dealService.getForClient(clientId));
     }
 
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_CREATE_DEAL', 'ROLE_USER_CREATE_DEAL')")
-    public ResponseEntity<Deal> store(@RequestBody @Validated DealStoreRequest dealStoreRequest) {
+    public ResponseEntity<DealResponse> store(@RequestBody @Validated DealStoreRequest dealStoreRequest) {
         return ResponseEntity.ok(this.dealService.store(dealStoreRequest));
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_UPDATE_DEAL', 'ROLE_USER_UPDATE_DEAL')")
-    public ResponseEntity<Deal> update(@PathVariable @Positive Long id, @RequestBody @Validated DealUpdateRequest dealUpdateRequest) {
+    public ResponseEntity<DealResponse> update(@PathVariable @Positive Long id, @RequestBody @Validated DealUpdateRequest dealUpdateRequest) {
         return ResponseEntity.ok(this.dealService.update(id, dealUpdateRequest));
     }
 
