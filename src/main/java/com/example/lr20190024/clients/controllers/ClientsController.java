@@ -3,6 +3,7 @@ package com.example.lr20190024.clients.controllers;
 import com.example.lr20190024.clients.requests.ClientStoreRequest;
 import com.example.lr20190024.clients.responses.ClientResponse;
 import com.example.lr20190024.clients.services.IClientsService;
+import com.example.lr20190024.clients.services.filters.ClientIndexFilterRequest;
 import com.example.lr20190024.common.exception.ResourceNotFoundException;
 import com.example.lr20190024.common.requests.PaginateRequest;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -25,8 +26,9 @@ public class ClientsController {
 
     @GetMapping(value = "")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN_VIEW_CLIENT', 'ROLE_USER_VIEW_CLIENT')")
-    public ResponseEntity<Page<ClientResponse>> index(@Valid PaginateRequest paginateRequest) {
+    public ResponseEntity<Page<ClientResponse>> index(@Valid ClientIndexFilterRequest clientIndexFilterRequest, @Valid PaginateRequest paginateRequest) {
         return ResponseEntity.ok().body(this.clientsService.getAll(
+                clientIndexFilterRequest,
                 paginateRequest.getPageable()
         ));
     }
