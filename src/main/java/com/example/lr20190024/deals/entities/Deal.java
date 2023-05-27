@@ -4,10 +4,7 @@ import com.example.lr20190024.clients.entities.Client;
 import com.example.lr20190024.common.jpa.BaseEntity;
 import com.example.lr20190024.deals.enums.DealStatus;
 import com.example.lr20190024.stages.entities.Stage;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -24,9 +21,11 @@ public class Deal extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private DealStatus dealStatus;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private Client client;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private Stage stage;
 }

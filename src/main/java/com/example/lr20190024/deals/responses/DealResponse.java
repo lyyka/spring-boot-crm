@@ -16,6 +16,9 @@ public class DealResponse {
     private DealStatus dealStatus;
     private Instant createdAt;
     private Instant updatedAt;
+    private Long stageId;
+    private String stageName;
+    private String pipelineName;
 
     public static DealResponse fromEntity(Deal deal) {
         return new DealResponse(
@@ -24,7 +27,10 @@ public class DealResponse {
                 deal.getNotes(),
                 deal.getDealStatus(),
                 deal.getCreatedAt(),
-                deal.getUpdatedAt()
+                deal.getUpdatedAt(),
+                deal.getStage().getId(),
+                deal.getStage().getName(),
+                deal.getStage().getPipeline().getName()
         );
     }
 }
