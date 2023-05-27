@@ -4,9 +4,9 @@ import com.example.lr20190024.clients.requests.ClientStoreRequest;
 import com.example.lr20190024.clients.responses.ClientResponse;
 import com.example.lr20190024.clients.services.IClientsService;
 import com.example.lr20190024.common.exception.ResourceNotFoundException;
-import com.example.lr20190024.common.utils.Paginate;
+import com.example.lr20190024.common.requests.PaginateRequest;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,9 +25,9 @@ public class ClientsController {
 
     @GetMapping(value = "")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN_VIEW_CLIENT', 'ROLE_USER_VIEW_CLIENT')")
-    public ResponseEntity<Page<ClientResponse>> index(@Nullable Integer page, @Nullable Integer perPage) {
+    public ResponseEntity<Page<ClientResponse>> index(@Valid PaginateRequest paginateRequest) {
         return ResponseEntity.ok().body(this.clientsService.getAll(
-                Paginate.from(page, perPage)
+                paginateRequest.getPageable()
         ));
     }
 

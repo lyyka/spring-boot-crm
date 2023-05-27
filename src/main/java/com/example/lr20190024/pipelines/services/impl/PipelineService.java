@@ -12,19 +12,26 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PipelineService implements IPipelineService {
     private final PipelinesRepository pipelinesRepository;
 
     @Override
-    public Page<PipelineResponse> getAll(Pageable pageable) {
+    public Page<PipelineResponse> paginate(Pageable pageable) {
         Page<Pipeline> page = this.pipelinesRepository.findAll(pageable);
         return new PageImpl<>(
                 page.getContent().stream().map(PipelineResponse::fromEntity).toList(),
                 pageable,
                 page.getTotalElements()
         );
+    }
+
+    @Override
+    public List<PipelineResponse> getAll() {
+        return this.pipelinesRepository.findAll().stream().map(PipelineResponse::fromEntity).toList();
     }
 
     @Override
