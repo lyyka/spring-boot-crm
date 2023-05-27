@@ -36,4 +36,7 @@ the deal, status, notes, ...
 2. `./gradlew build`
 3. `./gradlew bootRun`
 
-The API should now be available at `localhost:8080/api`.
+**The API** should now be available at `localhost:8080/api/*`.
+
+**SwaggerUI** is available
+at [`http://localhost:8080/swagger-ui/index.html`](http://localhost:8080/swagger-ui/index.html).
