@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +33,7 @@ public class AuthenticationController {
         try {
             authenticationService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new LoginResponse(null));
+            return ResponseEntity.badRequest().body(new LoginResponse(null, null, null));
         }
 
         try {
@@ -40,9 +42,12 @@ public class AuthenticationController {
 
             final String token = jwtTokenUtil.generateToken(userDetails);
 
-            return ResponseEntity.ok(new LoginResponse(token));
+            String plainTextUsername = userDetails.getUsername();
+            String encryptedUsername = Encryptors.text(userDetails.getPassword(), KeyGenerators.string().generateKey())
+                    .encrypt(plainTextUsername);
+            return ResponseEntity.ok(new LoginResponse(token, plainTextUsername, encryptedUsername));
         } catch (UsernameNotFoundException e) {
-            return ResponseEntity.badRequest().body(new LoginResponse(null));
+            return ResponseEntity.badRequest().body(new LoginResponse(null, null, null));
         }
     }
 }
