@@ -36,7 +36,6 @@ public class StagesSeeder {
                     this.dealsRepository.save(
                             new Deal(
                                     "Deal " + stage.getId(),
-                                    null,
                                     DealStatus.values()[new Random().nextInt(DealStatus.values().length)],
                                     client,
                                     stage

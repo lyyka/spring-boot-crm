@@ -16,8 +16,6 @@ import lombok.*;
 public class Deal extends BaseEntity {
     private String name;
 
-    private String notes;
-
     @Enumerated(EnumType.STRING)
     private DealStatus dealStatus;
 

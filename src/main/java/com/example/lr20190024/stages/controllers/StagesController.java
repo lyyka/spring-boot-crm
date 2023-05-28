@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,6 +36,14 @@ public class StagesController {
     public ResponseEntity<StageResponse> get(@PathVariable @Positive Long id) {
         return ResponseEntity.ok().body(
                 this.stageService.get(id)
+        );
+    }
+
+    @GetMapping(value = "get-ids-per-pipeline")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_VIEW_STAGE')")
+    public ResponseEntity<Map<Long, List<StageResponse>>> getStagesPerPipeline() {
+        return ResponseEntity.ok().body(
+                this.stageService.getStagesPerPipeline()
         );
     }
 

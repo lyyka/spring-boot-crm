@@ -5,6 +5,7 @@ import com.example.lr20190024.clients.repositories.ClientsRepository;
 import com.example.lr20190024.common.exception.ResourceNotFoundException;
 import com.example.lr20190024.deals.entities.Deal;
 import com.example.lr20190024.deals.repositories.DealsRepository;
+import com.example.lr20190024.deals.requests.DealStageUpdateRequest;
 import com.example.lr20190024.deals.requests.DealStoreRequest;
 import com.example.lr20190024.deals.requests.DealUpdateRequest;
 import com.example.lr20190024.deals.responses.DealResponse;
@@ -29,6 +30,13 @@ public class DealService implements IDealService {
     }
 
     @Override
+    public DealResponse get(Long id) {
+        return DealResponse.fromEntity(
+                this.dealsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Deal not found"))
+        );
+    }
+
+    @Override
     public DealResponse store(DealStoreRequest request) {
         Stage stage = this.stagesRepository.findById(request.getStageId()).orElseThrow(() -> new ResourceNotFoundException("Stage not found"));
         Client client = this.clientsRepository.findById(request.getClientId()).orElseThrow(() -> new ResourceNotFoundException("Client not found"));
@@ -36,7 +44,6 @@ public class DealService implements IDealService {
                 this.dealsRepository.save(
                         new Deal(
                                 request.getName(),
-                                request.getNotes(),
                                 request.getDealStatus(),
                                 client,
                                 stage
@@ -51,7 +58,14 @@ public class DealService implements IDealService {
         Stage stage = this.stagesRepository.findById(request.getStageId()).orElseThrow(() -> new ResourceNotFoundException("Stage not found"));
         deal.setName(request.getName());
         deal.setDealStatus(request.getDealStatus());
-        deal.setNotes(request.getNotes());
+        deal.setStage(stage);
+        return DealResponse.fromEntity(this.dealsRepository.save(deal));
+    }
+
+    @Override
+    public DealResponse updateStage(Long id, DealStageUpdateRequest request) {
+        Deal deal = this.dealsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Deal not found"));
+        Stage stage = this.stagesRepository.findById(request.getStageId()).orElseThrow(() -> new ResourceNotFoundException("Stage not found"));
         deal.setStage(stage);
         return DealResponse.fromEntity(this.dealsRepository.save(deal));
     }

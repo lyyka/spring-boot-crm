@@ -12,24 +12,24 @@ import java.time.Instant;
 public class DealResponse {
     private Long id;
     private String name;
-    private String notes;
     private DealStatus dealStatus;
     private Instant createdAt;
     private Instant updatedAt;
     private Long stageId;
     private String stageName;
+    private Long pipelineId;
     private String pipelineName;
 
     public static DealResponse fromEntity(Deal deal) {
         return new DealResponse(
                 deal.getId(),
                 deal.getName(),
-                deal.getNotes(),
                 deal.getDealStatus(),
                 deal.getCreatedAt(),
                 deal.getUpdatedAt(),
                 deal.getStage().getId(),
                 deal.getStage().getName(),
+                deal.getStage().getPipeline().getId(),
                 deal.getStage().getPipeline().getName()
         );
     }

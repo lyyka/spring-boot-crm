@@ -6,11 +6,14 @@ import com.example.lr20190024.stages.requests.StageUpdateRequest;
 import com.example.lr20190024.stages.responses.StageResponse;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IStageService {
     List<StageResponse> getForPipeline(Long id);
 
     StageResponse get(Long id);
+
+    Map<Long, List<StageResponse>> getStagesPerPipeline();
 
     Stage store(StageStoreRequest stageStoreRequest);
 

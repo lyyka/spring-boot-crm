@@ -1,5 +1,6 @@
 package com.example.lr20190024.deals.controllers;
 
+import com.example.lr20190024.deals.requests.DealStageUpdateRequest;
 import com.example.lr20190024.deals.requests.DealStoreRequest;
 import com.example.lr20190024.deals.requests.DealUpdateRequest;
 import com.example.lr20190024.deals.responses.DealResponse;
@@ -29,6 +30,12 @@ public class DealsController {
         return ResponseEntity.ok(this.dealService.getForClient(clientId));
     }
 
+    @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_VIEW_DEAL', 'ROLE_USER_VIEW_DEAL')")
+    public ResponseEntity<DealResponse> get(@PathVariable @Positive Long id) {
+        return ResponseEntity.ok(this.dealService.get(id));
+    }
+
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_CREATE_DEAL', 'ROLE_USER_CREATE_DEAL')")
     public ResponseEntity<DealResponse> store(@RequestBody @Validated DealStoreRequest dealStoreRequest) {
@@ -39,6 +46,12 @@ public class DealsController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_UPDATE_DEAL', 'ROLE_USER_UPDATE_DEAL')")
     public ResponseEntity<DealResponse> update(@PathVariable @Positive Long id, @RequestBody @Validated DealUpdateRequest dealUpdateRequest) {
         return ResponseEntity.ok(this.dealService.update(id, dealUpdateRequest));
+    }
+
+    @PutMapping(value = "/update-stage/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_UPDATE_DEAL', 'ROLE_USER_UPDATE_DEAL')")
+    public ResponseEntity<DealResponse> updateStage(@PathVariable @Positive Long id, @RequestBody @Validated DealStageUpdateRequest dealStageUpdateRequest) {
+        return ResponseEntity.ok(this.dealService.updateStage(id, dealStageUpdateRequest));
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

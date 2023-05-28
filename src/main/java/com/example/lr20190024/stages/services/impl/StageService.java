@@ -12,7 +12,7 @@ import com.example.lr20190024.stages.services.IStageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +32,28 @@ public class StageService implements IStageService {
         return StageResponse.fromEntity(
                 this.stagesRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Stage not found"))
         );
+    }
+
+    @Override
+    public Map<Long, List<StageResponse>> getStagesPerPipeline() {
+        Set<Stage> allStages = this.stagesRepository.fetchAllWithPipelines();
+        Map<Long, List<StageResponse>> result = new HashMap<>();
+
+        for (Stage stage : allStages) {
+            List<StageResponse> idsList = result.get(stage.getPipeline().getId());
+            StageResponse sr = new StageResponse();
+            sr.setId(stage.getId());
+            sr.setName(stage.getName());
+            if (idsList == null) {
+                idsList = new ArrayList<>();
+                idsList.add(sr);
+                result.put(stage.getPipeline().getId(), idsList);
+            } else {
+                idsList.add(sr);
+            }
+        }
+
+        return result;
     }
 
     @Override
