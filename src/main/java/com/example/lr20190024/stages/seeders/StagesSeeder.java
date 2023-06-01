@@ -30,7 +30,7 @@ public class StagesSeeder {
 
         for (Pipeline pipeline : pipelinesRepository.findAll()) {
             for (int j = 1; j <= 3; j++) {
-                Stage stage = stagesRepository.save(new Stage(pipeline, "Stage " + j));
+                Stage stage = stagesRepository.save(new Stage(pipeline, "Stage " + j, j));
 
                 for (Client client : clients) {
                     this.dealsRepository.save(

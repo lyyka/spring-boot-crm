@@ -2,6 +2,8 @@ package com.example.lr20190024.stages.controllers;
 
 import com.example.lr20190024.common.exception.ResourceNotFoundException;
 import com.example.lr20190024.stages.entities.Stage;
+import com.example.lr20190024.stages.exceptions.InvalidOrderException;
+import com.example.lr20190024.stages.requests.StageOrderUpdateRequest;
 import com.example.lr20190024.stages.requests.StageStoreRequest;
 import com.example.lr20190024.stages.requests.StageUpdateRequest;
 import com.example.lr20190024.stages.responses.StageResponse;
@@ -62,6 +64,19 @@ public class StagesController {
             return ResponseEntity.ok().body(StageResponse.fromEntity(stage));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping(value = "/order/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN_UPDATE_STAGE')")
+    public ResponseEntity<StageResponse> updateOrder(@PathVariable @Positive Long id, @RequestBody @Validated StageOrderUpdateRequest stageOrderUpdateRequest) {
+        try {
+            Stage stage = this.stageService.updateOrder(id, stageOrderUpdateRequest);
+            return ResponseEntity.ok().body(StageResponse.fromEntity(stage));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (InvalidOrderException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 

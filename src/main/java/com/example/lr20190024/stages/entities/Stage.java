@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 @Getter
@@ -20,4 +21,6 @@ public class Stage extends BaseEntity {
     @JoinColumn(name = "pipeline_id")
     private Pipeline pipeline;
     private String name;
+    @Positive
+    private Integer stageOrder;
 }
