@@ -8,6 +8,7 @@ import com.example.lr20190024.users.services.impl.JwtUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.encrypt.Encryptors;
@@ -33,7 +34,7 @@ public class AuthenticationController {
         try {
             authenticationService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new LoginResponse(null, null, null));
+            return ResponseEntity.badRequest().body(new LoginResponse(null, null, null, null));
         }
 
         try {
@@ -45,9 +46,9 @@ public class AuthenticationController {
             String plainTextUsername = userDetails.getUsername();
             String encryptedUsername = Encryptors.text(userDetails.getPassword(), KeyGenerators.string().generateKey())
                     .encrypt(plainTextUsername);
-            return ResponseEntity.ok(new LoginResponse(token, plainTextUsername, encryptedUsername));
+            return ResponseEntity.ok(new LoginResponse(token, plainTextUsername, encryptedUsername, userDetails.getAuthorities().stream().map((GrantedAuthority auth) -> auth.getAuthority()).toList()));
         } catch (UsernameNotFoundException e) {
-            return ResponseEntity.badRequest().body(new LoginResponse(null, null, null));
+            return ResponseEntity.badRequest().body(new LoginResponse(null, null, null, null));
         }
     }
 }
