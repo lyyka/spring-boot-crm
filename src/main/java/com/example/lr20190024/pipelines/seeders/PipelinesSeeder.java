@@ -15,8 +15,8 @@ public class PipelinesSeeder {
 
     @PostConstruct
     public void seed() {
-        pipelinesRepository.save(new Pipeline("Product 1 pipeline", new HashSet<>()));
-        pipelinesRepository.save(new Pipeline("Product 2 pipeline", new HashSet<>()));
-        pipelinesRepository.save(new Pipeline("Product 3 pipeline", new HashSet<>()));
+        pipelinesRepository.save(new Pipeline("Stambeni kredit", new HashSet<>()));
+        pipelinesRepository.save(new Pipeline("Kes kredit", new HashSet<>()));
+        pipelinesRepository.save(new Pipeline("Kupovina nekretnine", new HashSet<>()));
     }
 }
